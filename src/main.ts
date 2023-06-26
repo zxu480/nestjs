@@ -9,6 +9,9 @@ async function bootstrap() {
       whitelist: true,
       transform: true, // transform payload to Dto instance
       forbidNonWhitelisted: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
   await app.listen(3000);
