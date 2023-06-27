@@ -11,35 +11,40 @@ import {
   Post,
   Query,
   Res,
+  SetMetadata,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { Public } from 'src/common/decorators/public.decorator';
+import { ParseIntPipe } from 'src/common/pipes/parse-int/parse-int.pipe';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
-//   @Get()
-//   @HttpCode(HttpStatus.GONE)
-//   findAll(@Res() response) {
-//     response.status(200).send('This action returns all coffees');
-//   }
+  //   @Get()
+  //   @HttpCode(HttpStatus.GONE)
+  //   findAll(@Res() response) {
+  //     response.status(200).send('This action returns all coffees');
+  //   }
+  @Public()
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto) {
+  async findAll(@Query() paginationQuery: PaginationQueryDto) {
+    // await new Promise((res) => setTimeout(res, 4000))
     return this.coffeesService.findAll(paginationQuery);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.coffeesService.findOne(id);
   }
 
   @Post()
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     // Logger.log(createCoffeeDto);
-    console.log(createCoffeeDto instanceof CreateCoffeeDto)
+    console.log(createCoffeeDto instanceof CreateCoffeeDto);
     return this.coffeesService.create(createCoffeeDto);
   }
 
